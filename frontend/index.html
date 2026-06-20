@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RiskGuard — Real-Time Fraud Detection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="pulse-rail" id="pulseRail" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">RG</span>
+      <div class="brand-text">
+        <span class="brand-name">RiskGuard</span>
+        <span class="brand-sub">Real-time transaction risk monitoring · demo instance</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <label class="api-field">
+        <span>API base</span>
+        <input id="apiBase" type="text" value="http://127.0.0.1:8000" spellcheck="false" />
+      </label>
+      <span class="conn-status" id="connStatus">
+        <i class="dot"></i> connecting
+      </span>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <section class="cards">
+      <article class="card">
+        <span class="card-label">Transactions monitored</span>
+        <span class="card-value" id="statTotal">0</span>
+        <span class="card-foot">since this session started</span>
+      </article>
+      <article class="card card-high">
+        <span class="card-label">Flagged high risk</span>
+        <span class="card-value" id="statHigh">0</span>
+        <span class="card-foot">held for manual review</span>
+      </article>
+      <article class="card card-medium">
+        <span class="card-label">Flagged medium risk</span>
+        <span class="card-value" id="statMedium">0</span>
+        <span class="card-foot">stepped-up verification</span>
+      </article>
+      <article class="card card-value">
+        <span class="card-label">Value protected</span>
+        <span class="card-value" id="statValue">₹0</span>
+        <span class="card-foot">flagged before settlement</span>
+      </article>
+    </section>
+
+    <section class="simulate-bar">
+      <span class="simulate-label">Inject a test pattern to see detection happen live:</span>
+      <div class="simulate-buttons" id="simButtons">
+        <button data-kind="large_amount">Large amount</button>
+        <button data-kind="odd_hour">Odd-hour activity</button>
+        <button data-kind="geo_jump">Impossible travel</button>
+        <button data-kind="new_beneficiary">New beneficiary</button>
+        <button data-kind="round_amount">Round-figure transfer</button>
+        <button data-kind="high_velocity">Rapid repeat txns</button>
+      </div>
+    </section>
+
+    <section class="main-grid">
+
+      <div class="panel feed-panel">
+        <div class="panel-head">
+          <h2>Live transaction feed</h2>
+          <span class="panel-hint">Newest first · click a row for the risk breakdown</span>
+        </div>
+        <div class="feed-table-wrap">
+          <table class="feed-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Customer</th>
+                <th>Account</th>
+                <th>Amount</th>
+                <th>City</th>
+                <th>Risk</th>
+              </tr>
+            </thead>
+            <tbody id="feedBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel side-panel">
+        <div class="panel-head">
+          <h2>Risk breakdown</h2>
+          <span class="panel-hint">Why the engine scored this transaction</span>
+        </div>
+        <div id="breakdown" class="breakdown-empty">
+          Select a transaction from the feed to see exactly which signals
+          fired and how each one contributed to its score.
+        </div>
+      </div>
+
+    </section>
+
+    <section class="main-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Risk score over time</h2>
+          <span class="panel-hint">Last 40 scored transactions</span>
+        </div>
+        <canvas id="scoreChart" height="140"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Flag reasons breakdown</h2>
+          <span class="panel-hint">Which signals are firing most often</span>
+        </div>
+        <canvas id="reasonChart" height="140"></canvas>
+      </div>
+    </section>
+
+    <footer class="footnote">
+      Demo dataset — all customers, accounts and transactions are synthetically generated for this
+      presentation and contain no real account data. Rule weights and thresholds are configuration,
+      not code, so the bank's risk team can tune them without a redeploy.
+    </footer>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
